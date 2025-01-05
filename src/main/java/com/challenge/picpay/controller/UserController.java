@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user/")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
@@ -18,32 +18,32 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity saveUser(@RequestBody UserModel user){
+    public ResponseEntity saveUser(@RequestBody UserModel user) {
 
         userService.registerUser(user);
 
-        if(user.getCpf_cnpj().isEmpty() ||
+        if (user.getCpf_cnpj().isEmpty() ||
                 user.getName().isEmpty() ||
                 user.getEmail().isEmpty() ||
                 user.getPassword().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Preencha todos os campos necessarios!");
 
-        if(userService.registerUser(user).getCpf_cnpj().equals(user.getCpf_cnpj()))
+        if (userService.registerUser(user).getCpf_cnpj().equals(user.getCpf_cnpj()))
             return ResponseEntity.ok("Conta criado com sucesso!");
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(user);
     }
 
     @GetMapping("/{cpf}")
-    public ResponseEntity findUser(@PathVariable String cpf){
+    public ResponseEntity findUser(@PathVariable String cpf) {
         return ResponseEntity.ok(userService.findUserModel(cpf));
     }
 
     @PostMapping("/transfer")
-    public ResponseEntity<String> transferValue(@RequestBody TransferUser user){
+    public ResponseEntity<String> transferValue(@RequestBody TransferUser user) {
 
-        if(user.value() < 0 ||
+        if (user.value() < 0 ||
                 user.payer().isEmpty() ||
                 user.payee().isEmpty())
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -51,6 +51,6 @@ public class UserController {
 
         userService.authenticationTransfer(user);
 
-        return ResponseEntity.ok("Transferencia Feita com Sucesso");
+        return ResponseEntity.ok("Transferencia Feita com Sucesso!");
     }
 }
